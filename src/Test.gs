@@ -14,7 +14,7 @@ function testSocios() {
 
   const socios = new SociosService();
 
-  const socio = socios.getByNumero(1);
+  const socio = socios.getByNumero(2);
 
   Logger.log(socio);
 
@@ -68,5 +68,42 @@ function testGenerarCampania() {
   const filas = contadores.generarFilasCampania();
 
   Logger.log(filas);
+
+}
+
+/**
+ * Crea una hoja temporal con los datos de la campaña.
+ */
+function testCrearHojaTemporal() {
+
+  const nombreHoja = "TEST";
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  let sheet = ss.getSheetByName(nombreHoja);
+
+  if (sheet) {
+    ss.deleteSheet(sheet);
+  }
+
+  sheet = ss.insertSheet(nombreHoja);
+
+  const contadores = new ContadoresService();
+
+  const datos = contadores.generarFilasCampania();
+
+  // Cabecera
+  datos.unshift([
+    "Nº Orden Contador",
+    "Nº Socio",
+    "Nombre",
+    "Nº Títulos"
+  ]);
+
+  sheet
+    .getRange(1, 1, datos.length, datos[0].length)
+    .setValues(datos);
+
+  Logger.log("Hoja TEST creada correctamente.");
 
 }
