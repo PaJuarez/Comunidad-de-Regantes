@@ -14,27 +14,16 @@ const APP = {
 };
 
 const SHEETS = {
-
   SOCIOS: "Listado Socios",
-
   CONTADORES: "Contadores",
-
   CONFIG: "Configuración",
-
   LOG: "LOG"
-
 };
 
 const HEADERS = {
-
   SOCIO: "Nº SOCIO",
-
   NOMBRE: "SOCIOS",
-
   TITULOS: "Nº TITULOS",
-
   CONTADOR: "Nº Orden Contador",
-
    CONTADOR_SOCIO: "Nº Socio"
-
 };
