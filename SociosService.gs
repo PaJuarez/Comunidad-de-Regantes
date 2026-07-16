@@ -10,8 +10,12 @@ class SociosService extends BaseService {
 
     super("Socios");
 
+    this.spreadsheet =
+      new SpreadsheetService();
+
     this.repository =
       new SheetRepository(
+        this.spreadsheet,
         CONFIG.SHEETS.SOCIOS
       );
 
@@ -35,7 +39,7 @@ class SociosService extends BaseService {
 
       this.cache[
         socio[
-          CONFIG.HEADERS.SOCIO
+        CONFIG.HEADERS.SOCIO
         ]
       ] = socio;
 
@@ -47,58 +51,58 @@ class SociosService extends BaseService {
 
     return this.cache[numero] || null;
 
-}
+  }
 
-exists(numero){
+  exists(numero) {
 
-    return this.getByNumero(numero)!=null;
+    return this.getByNumero(numero) != null;
 
-}
+  }
 
-getNombre(numero){
+  getNombre(numero) {
 
-    const socio=this.getByNumero(numero);
+    const socio = this.getByNumero(numero);
 
-    if(!socio) return "";
+    if (!socio) return "";
 
     return socio[
-        CONFIG.HEADERS.NOMBRE
+      CONFIG.HEADERS.NOMBRE
     ];
 
-}
+  }
 
-getTitulos(numero){
+  getTitulos(numero) {
 
-    const socio=this.getByNumero(numero);
+    const socio = this.getByNumero(numero);
 
-    if(!socio) return 0;
+    if (!socio) return 0;
 
     return Number(
-        socio[
-            CONFIG.HEADERS.TITULOS
-        ]
+      socio[
+      CONFIG.HEADERS.TITULOS
+      ]
     );
 
-}
+  }
 
-buscar(texto){
+  buscar(texto) {
 
-    texto=texto.toLowerCase();
+    texto = texto.toLowerCase();
 
     return Object.values(this.cache)
 
-        .filter(s=>{
+      .filter(s => {
 
-            return s[
-                CONFIG.HEADERS.NOMBRE
-            ]
+        return s[
+          CONFIG.HEADERS.NOMBRE
+        ]
 
-            .toLowerCase()
+          .toLowerCase()
 
-            .includes(texto);
+          .includes(texto);
 
-        });
+      });
 
-}
+  }
 
 }

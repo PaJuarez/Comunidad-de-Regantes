@@ -1,29 +1,25 @@
 /**
  * ==========================================================
- * Comunidad de Regantes
- * Archivo: SheetRepository.gs
- *
- * Versión: 0.3.0
- * Última actualización: 05/07/2026
- *
- * Repositorio genérico para acceder a hojas de cálculo.
+ * SheetRepository.gs
  * ==========================================================
  */
 
 class SheetRepository {
 
-  constructor(sheetName) {
+  constructor(spreadsheetService, sheetName) {
 
     this.sheetName = sheetName;
 
-    this.sheet = SpreadsheetApp
-      .getActive()
-      .getSheetByName(sheetName);
+    this.spreadsheet = spreadsheetService;
+
+    this.sheet = this.spreadsheet.getSheet(sheetName);
 
     if (!this.sheet) {
+
       throw new Error(
         `No existe la hoja "${sheetName}".`
       );
+
     }
 
     this.reload();
@@ -35,11 +31,13 @@ class SheetRepository {
    */
   reload() {
 
-    this.data = this.sheet
-      .getDataRange()
-      .getValues();
+    this.data =
+      this.sheet
+        .getDataRange()
+        .getValues();
 
-    this.headers = this.data.shift();
+    this.headers =
+      this.data.shift();
 
   }
 
@@ -66,7 +64,8 @@ class SheetRepository {
    */
   getColumnIndex(name) {
 
-    const index = this.headers.indexOf(name);
+    const index =
+      this.headers.indexOf(name);
 
     if (index === -1) {
 
@@ -81,7 +80,7 @@ class SheetRepository {
   }
 
   /**
-   * Convierte una fila en un objeto.
+   * Convierte una fila en objeto.
    */
   toObject(row) {
 
@@ -98,40 +97,125 @@ class SheetRepository {
   }
 
   /**
-   * Busca el primer registro que coincida con un valor.
-   *
-   * @param {string} field
-   * @param {*} value
-   * @returns {Object|null}
+   * Busca una fila por el valor de una columna.
    */
-  findOne(field, value) {
+  findOne(columnName, value) {
 
-    const index = this.getColumnIndex(field);
+    const index =
+      this.getColumnIndex(columnName);
 
-    const row = this.data.find(r => r[index] == value);
+    const row =
+      this.data.find(r => r[index] == value);
 
-    if (!row) {
-      return null;
-    }
-
-    return this.toObject(row);
+    return row
+      ? this.toObject(row)
+      : null;
 
   }
 
   /**
-   * Devuelve todos los registros que coincidan.
-   *
-   * @param {string} field
-   * @param {*} value
-   * @returns {Object[]}
+   * Busca varias filas.
    */
-  findAll(field, value) {
+  findAll(columnName, value) {
 
-    const index = this.getColumnIndex(field);
+    const index =
+      this.getColumnIndex(columnName);
 
     return this.data
+
       .filter(r => r[index] == value)
+
       .map(r => this.toObject(r));
+
+  }
+
+  /**
+   * Actualiza un valor.
+   */
+  update(searchColumn, searchValue, updateColumn, newValue) {
+
+    const searchIndex =
+      this.getColumnIndex(searchColumn);
+
+    const updateIndex =
+      this.getColumnIndex(updateColumn);
+
+    for (let i = 0; i < this.data.length; i++) {
+
+      if (this.data[i][searchIndex] == searchValue) {
+
+        this.sheet
+          .getRange(
+            i + 2,
+            updateIndex + 1
+          )
+          .setValue(newValue);
+
+        this.reload();
+
+        return true;
+
+      }
+
+    }
+
+    return false;
+
+  }
+
+  /**
+   * Escribe los encabezados.
+   */
+  setHeaders(headers) {
+
+    this.sheet.clear();
+
+    this.sheet
+      .getRange(
+        1,
+        1,
+        1,
+        headers.length
+      )
+      .setValues([headers]);
+
+    this.sheet
+      .getRange(
+        1,
+        1,
+        1,
+        headers.length
+      )
+      .setFontWeight("bold");
+
+    this.reload();
+
+  }
+
+  /**
+   * Añade varias filas de una sola vez.
+   */
+  appendRows(rows) {
+
+    if (!rows || rows.length === 0) {
+      return;
+    }
+
+    const firstRow =
+      this.sheet.getLastRow() + 1;
+
+    this.sheet
+
+      .getRange(
+        firstRow,
+        1,
+        rows.length,
+        rows[0].length
+      )
+
+      .setValues(rows);
+
+    this.reload();
 
   }
 

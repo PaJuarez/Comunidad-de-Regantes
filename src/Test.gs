@@ -107,3 +107,111 @@ function testCrearHojaTemporal() {
   Logger.log("Hoja TEST creada correctamente.");
 
 }
+
+/**
+ * ==========================================================
+ * Prueba creación de campaña
+ * ==========================================================
+ */
+
+function testCrearCampania() {
+
+  const campanias =
+    new CampaniasService();
+
+  campanias.crear(
+    "TEST CAMPAÑA"
+  );
+
+  Logger.log(
+    "Campaña creada correctamente."
+  );
+
+}
+
+/**
+ * ==========================================================
+ * Prueba ConfiguracionService
+ * ==========================================================
+ */
+
+function testConfiguracion() {
+
+  const config =
+    new ConfiguracionService();
+
+  Logger.log(
+    "Precio agua: " +
+    config.getPrecioAgua()
+  );
+
+  Logger.log(
+    "IVA: " +
+    config.getIVA()
+  );
+
+  Logger.log(
+    "Moneda: " +
+    config.getMoneda()
+  );
+
+}
+
+/**
+ * ==========================================================
+ * Test ConfiguracionService
+ * ==========================================================
+ */
+
+function testConfiguracion() {
+
+  const config = new ConfiguracionService();
+
+  config.validar();
+
+  Logger.log("Configuración válida");
+
+  Logger.log("Precio agua: " + config.getPrecioAgua());
+
+  Logger.log("IVA: " + config.getIVA());
+
+  Logger.log("Moneda: " + config.getMoneda());
+
+}
+
+/**
+ * ==========================================================
+ * Test CampaniasService
+ * ==========================================================
+ */
+
+function testCrearCampania() {
+
+  const campanias =
+    new CampaniasService();
+
+  campanias.crearCampania(
+    "PRUEBA"
+  );
+
+}
+
+/**
+ * ==========================================================
+ * Test SpreadsheetService
+ * ==========================================================
+ */
+
+function testSpreadsheetService() {
+
+  const ss = new SpreadsheetService();
+
+  Logger.log(
+    ss.exists(CONFIG.SHEETS.SOCIOS)
+  );
+
+  Logger.log(
+    ss.exists("Hoja inexistente")
+  );
+
+}

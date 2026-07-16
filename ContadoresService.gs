@@ -17,9 +17,14 @@ class ContadoresService extends BaseService {
 
     super("Contadores");
 
-    this.repository = new SheetRepository(
-      CONFIG.SHEETS.CONTADORES
-    );
+    this.spreadsheet =
+      new SpreadsheetService();
+
+    this.repository =
+      new SheetRepository(
+        this.spreadsheet,
+        CONFIG.SHEETS.CONTADORES
+      );
 
     this.socios = new SociosService();
 
@@ -111,7 +116,7 @@ class ContadoresService extends BaseService {
 
       const numeroSocio =
         contador[
-          CONFIG.HEADERS.CONTADOR_SOCIO
+        CONFIG.HEADERS.CONTADOR_SOCIO
         ];
 
       const socio =
@@ -123,17 +128,17 @@ class ContadoresService extends BaseService {
       filas.push([
 
         contador[
-          CONFIG.HEADERS.CONTADOR
+        CONFIG.HEADERS.CONTADOR
         ],
 
         numeroSocio,
 
         socio[
-          CONFIG.HEADERS.NOMBRE
+        CONFIG.HEADERS.NOMBRE
         ],
 
         socio[
-          CONFIG.HEADERS.TITULOS
+        CONFIG.HEADERS.TITULOS
         ]
 
       ]);
